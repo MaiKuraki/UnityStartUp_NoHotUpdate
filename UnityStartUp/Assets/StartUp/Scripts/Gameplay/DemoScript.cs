@@ -23,7 +23,6 @@ namespace StartUp.Gameplay
         {
             uiService.OpenUI(UI.PageName.StartUpPage);
             uiService.CloseUI(UI.PageName.TitlePage);
-            uiService.CloseUI(UI.PageName.AssetUpdatePage);
             await UniTask.Delay(1000);
         }
     }

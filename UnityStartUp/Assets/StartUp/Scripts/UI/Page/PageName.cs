@@ -9,7 +9,6 @@ namespace StartUp.UI
     public static class PageName
     {
         //  Launch
-        public static readonly string AssetUpdatePage = "AssetUpdatePage";
         public static readonly string TitlePage = "TitlePage";
         
         //  Login

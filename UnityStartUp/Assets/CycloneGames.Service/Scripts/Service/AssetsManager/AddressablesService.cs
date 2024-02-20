@@ -28,20 +28,7 @@ namespace CycloneGames.Service
         /// <returns>A UniTask that completes with the loaded asset.</returns>
         UniTask<TResultObject> LoadAssetWithRetentionAsync<TResultObject>(string key,
             CancellationToken cancellationToken = default) where TResultObject : UnityEngine.Object;
-
-        /// <summary>
-        /// Loads a scene asynchronously and releases the asynchronous handle immediately after loading completes.
-        /// </summary>
-        /// <param name="key">The key of the scene to load.</param>
-        /// <param name="sceneLoadMode">The mode in which the scene should be loaded, Single or Additive.</param>
-        /// <param name="activateOnLoad">Should the scene be activated upon load.</param>
-        /// <param name="priority">The loading priority. Higher numbers are higher priority.</param>
-        /// <param name="cancellationToken">The cancellation token.</param>
-        /// <returns>A UniTask that completes with the loaded scene instance.</returns>
-        UniTask<SceneInstance> LoadSceneWithAutoReleaseAsync(string key,
-            AddressablesManager.SceneLoadMode sceneLoadMode = AddressablesManager.SceneLoadMode.Single,
-            bool activateOnLoad = true, int priority = 100, CancellationToken cancellationToken = default);
-
+        
         /// <summary>
         /// Loads a scene asynchronously and retains the handle in memory after loading completes.
         /// To prevent memory leaks, ReleaseAssetHandle(key) must be called when the scene is no longer needed.
@@ -52,7 +39,7 @@ namespace CycloneGames.Service
         /// <param name="priority">The loading priority. Higher numbers are higher priority.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>A UniTask that completes with the loaded scene instance.</returns>
-        UniTask<SceneInstance> LoadSceneWithRetentionAsync(string key,
+        UniTask<SceneInstance> LoadSceneAsync(string key,
             AddressablesManager.SceneLoadMode sceneLoadMode = AddressablesManager.SceneLoadMode.Single,
             bool activateOnLoad = true, int priority = 100, CancellationToken cancellationToken = default);
 
@@ -114,7 +101,7 @@ namespace CycloneGames.Service
                 AddressablesManager.AssetHandleReleasePolicy.Keep, cancellationToken);
         }
 
-        public UniTask<SceneInstance> LoadSceneWithAutoReleaseAsync(string key,
+        public UniTask<SceneInstance> LoadSceneAsync(string key,
             AddressablesManager.SceneLoadMode sceneLoadMode = AddressablesManager.SceneLoadMode.Single,
             bool activateOnLoad = true, int priority = 100, CancellationToken cancellationToken = default)
         {
@@ -123,21 +110,7 @@ namespace CycloneGames.Service
                 throw new System.InvalidOperationException($"{DEBUG_FLAG} AddressablesManager is not initialized.");
             }
 
-            return addressablesManager.LoadSceneAsync(key, sceneLoadMode, activateOnLoad, priority,
-                AddressablesManager.AssetHandleReleasePolicy.ReleaseOnComplete, cancellationToken);
-        }
-
-        public UniTask<SceneInstance> LoadSceneWithRetentionAsync(string key,
-            AddressablesManager.SceneLoadMode sceneLoadMode = AddressablesManager.SceneLoadMode.Single,
-            bool activateOnLoad = true, int priority = 100, CancellationToken cancellationToken = default)
-        {
-            if (addressablesManager == null)
-            {
-                throw new System.InvalidOperationException($"{DEBUG_FLAG} AddressablesManager is not initialized.");
-            }
-
-            return addressablesManager.LoadSceneAsync(key, sceneLoadMode, activateOnLoad, priority,
-                AddressablesManager.AssetHandleReleasePolicy.Keep, cancellationToken);
+            return addressablesManager.LoadSceneAsync(key, sceneLoadMode, activateOnLoad, priority, cancellationToken);
         }
 
 

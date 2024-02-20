@@ -25,7 +25,7 @@ public class Boot : MonoBehaviour
     async UniTask DelayEnterGameScene(int milliSecond)
     {
         await UniTask.Delay(milliSecond);
-        await addressablesService.LoadSceneWithAutoReleaseAsync("Assets/StartUp/Scenes/Scene_StartUp.unity", AddressablesManager.SceneLoadMode.Additive);
+        await addressablesService.LoadSceneAsync("Assets/StartUp/Scenes/Scene_StartUp.unity", AddressablesManager.SceneLoadMode.Additive);
         await SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene());
     }
 }

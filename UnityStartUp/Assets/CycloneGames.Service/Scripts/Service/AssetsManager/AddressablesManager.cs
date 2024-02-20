@@ -131,39 +131,53 @@ namespace CycloneGames.Service
             // To prevent the callback from remaining registered after the task is complete, we unregister it upon completion.
             handle.Completed += _ => registration.Dispose();
         }
-        
+
         public UniTask<SceneInstance> LoadSceneAsync(string key, SceneLoadMode sceneLoadMode = SceneLoadMode.Single,
             bool activateOnLoad = true, int priority = 100,
-            AssetHandleReleasePolicy releasePolicy = AssetHandleReleasePolicy.Keep,
             CancellationToken cancellationToken = default)
         {
+            //  CAUTION: When using Addressables to load scenes, releasing the handle prematurely can result in a black screen and rendering issues after the scene is built.
+            
+            // Create a UniTaskCompletionSource which we will use to signal the completion of the scene load
             var completionSource = new UniTaskCompletionSource<SceneInstance>();
+            // Determine the correct LoadSceneMode based on the SceneLoadMode specified
             LoadSceneMode loadSceneMode =
                 sceneLoadMode == SceneLoadMode.Single ? LoadSceneMode.Single : LoadSceneMode.Additive;
+            // Start the scene loading process
             var operationHandle = Addressables.LoadSceneAsync(key, loadSceneMode, activateOnLoad, priority);
+
+            // Register the cancellation action before starting the async operation
+            if (cancellationToken.CanBeCanceled)
+            {
+                cancellationToken.Register(() =>
+                {
+                    if (!operationHandle.IsDone)
+                    {
+                        Addressables.Release(operationHandle);
+                        completionSource.TrySetCanceled();
+                    }
+                });
+            }
 
             operationHandle.Completed += operation =>
             {
+                // Do not process if the async operation was cancelled
                 if (cancellationToken.IsCancellationRequested)
                 {
-                    completionSource.TrySetCanceled();
-                    ReleaseAssetHandleIfNeeded(key, operationHandle, releasePolicy);
                     return;
                 }
 
                 try
                 {
+                    // Check if the operation was successful
                     if (operation.Status == AsyncOperationStatus.Succeeded)
                     {
-                        if (releasePolicy == AssetHandleReleasePolicy.Keep)
-                        {
-                            activeHandles[key] = operationHandle;
-                        }
-
+                        // Set the result to the completion source
                         completionSource.TrySetResult(operation.Result);
                     }
                     else
                     {
+                        // If the operation failed, construct an error message and set it as an exception
                         var errorMessage = $"Failed to load the scene with key {key}. Status: {operation.Status}";
                         if (operation.OperationException != null)
                         {
@@ -175,19 +189,13 @@ namespace CycloneGames.Service
                 }
                 catch (Exception ex)
                 {
-                    Debug.LogError($"{DEBUG_FLAG} Exception occurred: {ex.Message}");
+                    // If an exception occurs during the completion of the operation, log it and set the exception
+                    Debug.LogError($"Exception occurred: {ex.Message}");
                     completionSource.TrySetException(ex);
-                }
-                finally
-                {
-                    if (releasePolicy != AssetHandleReleasePolicy.Keep)
-                    {
-                        ReleaseAssetHandleIfNeeded(key, operationHandle, releasePolicy);
-                    }
                 }
             };
 
-            RegisterForCancellation(key, operationHandle, cancellationToken);
+            // Return the task which will complete once the operation completes
             return completionSource.Task;
         }
     }

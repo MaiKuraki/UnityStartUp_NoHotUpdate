@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using CycloneGames.Service;
 using Cysharp.Threading.Tasks;
 using MessagePipe;
@@ -19,7 +20,10 @@ namespace CycloneGames.UIFramework
         [Inject] private IAddressablesService addressablesService;
         [Inject] private UIRoot uiRoot;
         [Inject] private DiContainer diContainer;
-        
+
+        private Dictionary<string, UniTaskCompletionSource<bool>> uiOpenTasks =
+            new Dictionary<string, UniTaskCompletionSource<bool>>();
+
         private void Start()
         {
             uiMsgSub.Subscribe(msg =>
@@ -43,19 +47,21 @@ namespace CycloneGames.UIFramework
 
         internal void CloseUI(string PageName)
         {
-            UILayer layer = uiRoot.TryGetUILayerFromPageName(PageName);
-
-            if (!layer)
-            {
-                Debug.LogError($"{DEBUG_FLAG} Can not find layer from PageName: {PageName}");
-                return;
-            }
-
-            layer.RemovePage(PageName);
+            CloseUIAsync(PageName).Forget();
         }
 
         async UniTask OpenUIAsync(string PageName)
         {
+            // Avoid duplicated open same UI
+            if (uiOpenTasks.ContainsKey(PageName))
+            {
+                Debug.LogError($"{DEBUG_FLAG} Duplicated Open! PageName: {PageName}");
+                return;
+            }
+
+            var tcs = new UniTaskCompletionSource<bool>();
+            uiOpenTasks[PageName] = tcs;
+
             Debug.Log($"{DEBUG_FLAG} Attempting to open UI: {PageName}");
             UIPageConfiguration pageConfig = null;
             Object pagePrefab = null;
@@ -90,7 +96,7 @@ namespace CycloneGames.UIFramework
                 // Perform any necessary cleanup here
                 return; // Handle the exception here instead of re-throwing it
             }
-    
+
             // If there are no exceptions and the resources have been successfully loaded, proceed to instantiate and setup the UI page
             string layerName = pageConfig.Layer.LayerName;
             UILayer uiLayer = uiRoot.GetUILayer(layerName);
@@ -98,6 +104,28 @@ namespace CycloneGames.UIFramework
             uiPage.SetPageConfiguration(pageConfig);
             uiPage.SetPageName(PageName);
             uiLayer.AddPage(uiPage);
+
+            tcs.TrySetResult(true);
+        }
+
+        async UniTask CloseUIAsync(string PageName)
+        {
+            if (uiOpenTasks.TryGetValue(PageName, out var openTask))
+            {
+                // Waiting Open Task Finished
+                await openTask.Task;
+                uiOpenTasks.Remove(PageName);
+            }
+
+            UILayer layer = uiRoot.TryGetUILayerFromPageName(PageName);
+
+            if (!layer)
+            {
+                Debug.LogError($"{DEBUG_FLAG} Can not find layer from PageName: {PageName}");
+                return;
+            }
+
+            layer.RemovePage(PageName);
         }
     }
 }

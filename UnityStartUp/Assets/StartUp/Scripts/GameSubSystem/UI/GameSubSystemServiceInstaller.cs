@@ -11,9 +11,14 @@ namespace StartUp.GameSubSystem
         public override void InstallBindings()
         {
             UIFramework uiFramework = UnityEngine.GameObject.FindObjectOfType<UIFramework>();
-            Container.BindInstance(uiFramework).AsSingle().NonLazy();
+            UnityEngine.GameObject.DontDestroyOnLoad(uiFramework);
+            Container.BindInstance(uiFramework).AsSingle();
+            Container.QueueForInject(uiFramework);
+            
             UIRoot uiRoot = UnityEngine.GameObject.FindObjectOfType<UIRoot>();
-            Container.BindInstance(uiRoot).AsSingle().NonLazy();
+            Container.BindInstance(uiRoot).AsSingle();
+            Container.QueueForInject(uiRoot);
+            
             Container.BindInterfacesTo<UIService>().AsSingle().NonLazy();
             Container.BindMessageBroker<UIMessage>(options: msgOpt);
         }

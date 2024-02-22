@@ -21,14 +21,11 @@ namespace CycloneGames.UIFramework
         [Inject] private IPublisher<UIMessage> uiMsgPub;
         [Inject] private DiContainer diContainer;
         
-        private UnityEngine.GameObject uiManagerGameObject;
         private UIManager uiManager;
         
         public void Initialize()
         {
-            uiManagerGameObject = new UnityEngine.GameObject("UIService");
-            uiManager = diContainer.InstantiateComponent<UIManager>(uiManagerGameObject);
-            UnityEngine.GameObject.DontDestroyOnLoad(uiManagerGameObject);
+            uiManager = diContainer.InstantiateComponentOnNewGameObject<UIManager>("UIService");
         }
 
         public void PublishUIMessage(UIMessage uiMsg)

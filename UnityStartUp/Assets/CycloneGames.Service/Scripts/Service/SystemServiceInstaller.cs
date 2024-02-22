@@ -15,8 +15,9 @@ namespace CycloneGames.Service
             Container.BindInterfacesTo<GraphicsSettingService>().AsSingle().NonLazy();
 
             MainCamera mainCamera = UnityEngine.GameObject.FindObjectOfType<MainCamera>();
-            Container.BindInstance(mainCamera).AsSingle().NonLazy();
             UnityEngine.GameObject.DontDestroyOnLoad(mainCamera);
+            Container.BindInstance(mainCamera).AsSingle();
+            Container.QueueForInject(mainCamera);
             
 #if ENABLE_CHEAT
             Container.Bind<ICheatService>().To<CheatService>()

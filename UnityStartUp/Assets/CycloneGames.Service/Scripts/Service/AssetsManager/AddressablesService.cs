@@ -8,9 +8,12 @@ namespace CycloneGames.Service
 {
     public interface IAddressablesService
     {
-        /// <summary> 
-        /// Loads an asset asynchronously and releases the asynchronous handle immediately after loading completes.
+        /// <summary>
+        /// Loads an asset asynchronously and automatically releases the async handle once loading is complete.
         /// </summary>
+        /// <remarks>
+        /// In most cases, this interface should not be used, as automatically releasing asset handles can lead to issues such as disappearing textures in scenes post-build.
+        /// </remarks>
         /// <param name="key">The key of the asset to load.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <typeparam name="TResultObject">The type of the asset to load.</typeparam>
@@ -19,9 +22,12 @@ namespace CycloneGames.Service
             CancellationToken cancellationToken = default) where TResultObject : UnityEngine.Object;
 
         /// <summary>
-        /// Loads an asset asynchronously and retains the handle in memory after loading completes.
+        /// Loads an asset asynchronously and retains the handle in memory after loading is complete.
         /// To prevent memory leaks, ReleaseAssetHandle(key) must be called when the asset is no longer needed.
         /// </summary>
+        /// <remarks>
+        /// This is the recommended interface for most situations. It should be used in conjunction with the Release interface to manually manage resource handles, as automatic release of resource handles can result in disappearing textures and scenes post-build.
+        /// </remarks>
         /// <param name="key">The key of the asset to be loaded.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <typeparam name="TResultObject">The type of the asset to be loaded.</typeparam>
@@ -35,8 +41,8 @@ namespace CycloneGames.Service
         /// </summary>
         /// <param name="key">The key of the scene to be loaded.</param>
         /// <param name="sceneLoadMode">The mode in which the scene should be loaded, Single or Additive.</param>
-        /// <param name="activateOnLoad">Should the scene be activated upon load.</param>
-        /// <param name="priority">The loading priority. Higher numbers are higher priority.</param>
+        /// <param name="activateOnLoad">Whether the scene should be activated upon load.</param>
+        /// <param name="priority">The loading priority. Higher numbers indicate higher priority.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>A UniTask that completes with the loaded scene instance.</returns>
         UniTask<SceneInstance> LoadSceneAsync(string key,

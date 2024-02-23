@@ -86,7 +86,7 @@ namespace CycloneGames.Gameplay
             await UniTask.WaitUntil(() => addressablesService.IsServiceReady());
 
             Actor killZVolume = null;
-            var killzPrefab = await addressablesService.LoadAssetWithAutoReleaseAsync<GameObject>($"{KillZVolumePrefabPath}");
+            var killzPrefab = await addressablesService.LoadAssetWithRetentionAsync<GameObject>($"{KillZVolumePrefabPath}");
             
             GameObject killZGO = Container.InstantiatePrefab(killzPrefab);
             if (killZGO != null)

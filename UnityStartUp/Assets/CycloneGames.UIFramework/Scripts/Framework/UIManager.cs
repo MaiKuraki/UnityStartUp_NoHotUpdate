@@ -4,6 +4,7 @@ using Cysharp.Threading.Tasks;
 using MessagePipe;
 using UnityEngine;
 using Zenject;
+using Object = UnityEngine.Object;
 
 namespace CycloneGames.UIFramework
 {
@@ -20,10 +21,9 @@ namespace CycloneGames.UIFramework
         [Inject] private IAddressablesService addressablesService;
         [Inject] private UIRoot uiRoot;
         [Inject] private DiContainer diContainer;
-
-        private Dictionary<string, UniTaskCompletionSource<bool>> uiOpenTasks =
-            new Dictionary<string, UniTaskCompletionSource<bool>>();
-
+        
+        private Dictionary<string, UniTaskCompletionSource<bool>> uiOpenTasks = new Dictionary<string, UniTaskCompletionSource<bool>>();
+        
         private void Start()
         {
             uiMsgSub.Subscribe(msg =>
@@ -58,14 +58,13 @@ namespace CycloneGames.UIFramework
                 Debug.LogError($"{DEBUG_FLAG} Duplicated Open! PageName: {PageName}");
                 return;
             }
-
             var tcs = new UniTaskCompletionSource<bool>();
             uiOpenTasks[PageName] = tcs;
-
+            
             Debug.Log($"{DEBUG_FLAG} Attempting to open UI: {PageName}");
             UIPageConfiguration pageConfig = null;
             Object pagePrefab = null;
-
+            
             try
             {
                 // Attempt to load the configuration
@@ -96,11 +95,20 @@ namespace CycloneGames.UIFramework
                 // Perform any necessary cleanup here
                 return; // Handle the exception here instead of re-throwing it
             }
-
+    
             // If there are no exceptions and the resources have been successfully loaded, proceed to instantiate and setup the UI page
             string layerName = pageConfig.Layer.LayerName;
             UILayer uiLayer = uiRoot.GetUILayer(layerName);
+            if (uiLayer.HasPage(PageName))
+            {
+                // Please note that within this framework, the opening of a UIPage must be unique;
+                // that is, UI pages similar to Notifications should be managed within the page itself and should not be opened repeatedly for the same UI page.
+                Debug.LogError($"{DEBUG_FLAG} Page already exists: {PageName}, layer: {uiLayer.LayerName}");
+                return;
+            }
             UIPage uiPage = diContainer.InstantiatePrefab(pagePrefab).GetComponent<UIPage>();
+            System.Type pageType = uiPage.GetType();
+            diContainer.Bind(pageType).FromInstance(uiPage).AsCached();
             uiPage.SetPageConfiguration(pageConfig);
             uiPage.SetPageName(PageName);
             uiLayer.AddPage(uiPage);
@@ -116,7 +124,7 @@ namespace CycloneGames.UIFramework
                 await openTask.Task;
                 uiOpenTasks.Remove(PageName);
             }
-
+            
             UILayer layer = uiRoot.TryGetUILayerFromPageName(PageName);
 
             if (!layer)
@@ -126,6 +134,8 @@ namespace CycloneGames.UIFramework
             }
 
             layer.RemovePage(PageName);
+            
+            addressablesService.ReleaseAssetHandle(UIPathBuilder.GetConfigPath(PageName));
         }
     }
 }

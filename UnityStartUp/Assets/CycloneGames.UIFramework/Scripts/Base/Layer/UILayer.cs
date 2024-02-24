@@ -34,6 +34,7 @@ namespace CycloneGames.UIFramework
 
         private void InitLayer()
         {
+            // If there are no children, the initialization is considered complete.
             if (transform.childCount == 0)
             {
                 bFinishedLayerInit = true;
@@ -41,7 +42,7 @@ namespace CycloneGames.UIFramework
                 return;
             }
             
-            // Ensure the page's Name matches its associated prefab name, 
+            // Ensure the page's Name matches its associated prefab name,
             // and that the page's Name is defined within the PageName class.
             uiPagesList = GetComponentsInChildren<UIPage>().ToList();
             foreach (UIPage page in uiPagesList)
@@ -54,12 +55,23 @@ namespace CycloneGames.UIFramework
             Debug.Log($"{DEBUG_FLAG} Finished init Layer: {LayerName}");
         }
 
+        public bool HasPage(string InPageName)
+        {
+            return uiPagesList.Any(page => page.PageName.Equals(InPageName, System.StringComparison.OrdinalIgnoreCase));
+        }
         public void AddPage(UIPage newPage)
         {
-            //  NOTE: Ensure the uiPageList is sorted.
+            // NOTE: Ensure the uiPageList is sorted before adding.
             if (!bFinishedLayerInit)
             {
                 Debug.LogError($"{DEBUG_FLAG} layer not init, current layer: {LayerName}");
+                return;
+            }
+            
+            // Check for the existence of a page with the same name before adding.
+            if (uiPagesList.Any(page => page.PageName == newPage.PageName))
+            {
+                Debug.LogError($"{DEBUG_FLAG} Page already exists: {newPage.PageName}");
                 return;
             }
             
@@ -67,34 +79,35 @@ namespace CycloneGames.UIFramework
             Transform pageTransform = newPage.transform;
             pageTransform.SetParent(transform, false);
             
+            // If the list is empty, simply add the new page.
             if (uiPagesList.Count == 0)
             {
                 uiPagesList.Add(newPage);
                 return;
             }
             
-            // 逆向遍历列表以找到最后一个Priority等于新页面Priority的索引
-            int insertIndex = uiPagesList.Count; // 初始化为列表末尾
+            // Reverse iterate through the list to find the last index with Priority equal to the new page's Priority.
+            int insertIndex = uiPagesList.Count; // Initialize as the end of the list.
 
             for (int i = uiPagesList.Count - 1; i >= 0; i--) 
             {
                 if (uiPagesList[i].Priority > newPage.Priority) 
                 {
-                    // 找到一个Priority更大的页面，将新页面插入到它前面
+                    // Found a page with a greater Priority, insert the new page before it.
                     insertIndex = i;
                 } 
                 else if (uiPagesList[i].Priority == newPage.Priority) 
                 {
-                    // 找到一个Priority相同的页面，插入到这个页面之后
+                    // Found a page with the same Priority, insert after this page.
                     insertIndex = i + 1;
-                    break; // 因为列表是排序的，所以可以中断循环
+                    break; // List is sorted so we can break the loop.
                 }
             }
 
-            // 插入新页面到计算出的插入点
+            // Insert the new page at the calculated index.
             uiPagesList.Insert(insertIndex, newPage);
 
-            // 只需更新新页面和所有之后页面的层级位置
+            // Only need to update the sibling index for the new page and any after it.
             for (int i = insertIndex; i < uiPagesList.Count; i++) 
             {
                 uiPagesList[i].transform.SetSiblingIndex(i);
@@ -103,7 +116,7 @@ namespace CycloneGames.UIFramework
 
         public void RemovePage(string InPageName)
         {
-            //  NOTE: Ensure the uiPageList is init.
+            // NOTE: Ensure the uiPageList is initialized.
             if (!bFinishedLayerInit)
             {
                 Debug.LogError($"{DEBUG_FLAG} layer not init, current layer: {LayerName}");
@@ -123,7 +136,7 @@ namespace CycloneGames.UIFramework
 
         private UIPage TryGetPageByPageName(string InPageName)
         {
-            //  Make sure the PageName in uiPageList is Unique
+            // Make sure the PageName in uiPageList is Unique.
             foreach (UIPage page in uiPagesList)
             {
                 if (page.PageName == InPageName)
@@ -137,14 +150,16 @@ namespace CycloneGames.UIFramework
         
         private void SortPagesByPriority()
         {
+            // If there's only one or no page, no need to sort.
             if(uiPagesList.Count <= 1) return;
             
-            #region Debug origin PageList Info
-            // for (int i = 0; i < uiPagesList.Count; i++)
-            // {
-            //     Debug.Log($"{DEBUG_FLAG} pageName: {uiPagesList[i].PageName}, Priority:{uiPagesList[i].Priority}, idx: {i}");
-            // }
-            #endregion
+            // The following section can be uncommented for debugging purposes to print original PageList info.
+            /*
+            for (int i = 0; i < uiPagesList.Count; i++)
+            {
+                Debug.Log($"{DEBUG_FLAG} pageName: {uiPagesList[i].PageName}, Priority:{uiPagesList[i].Priority}, idx: {i}");
+            }
+            */
             
             // for (int i = 1; i < uiPagesList.Count; i++)
             // {
@@ -160,17 +175,18 @@ namespace CycloneGames.UIFramework
             //
             //     uiPagesList[j + 1] = current;
             // }
-            
+            // Sort pages by their Priority using LINQ, ensuring higher Priority pages are later in the list.
             uiPagesList = uiPagesList.OrderBy(page => page.Priority).ToList();
 
-            #region Debug Sorted PageList Info
-            // for (int i = 0; i < uiPagesList.Count; i++)
-            // {
-            //     Debug.Log($"{DEBUG_FLAG} sorted pageName: {uiPagesList[i].PageName}, Priority:{uiPagesList[i].Priority}, idx: {i}");
-            // }
-            #endregion
+            // The following section can be uncommented for debugging purposes to print sorted PageList info.
+            /*
+            for (int i = 0; i < uiPagesList.Count; i++)
+            {
+                Debug.Log($"{DEBUG_FLAG} sorted pageName: {uiPagesList[i].PageName}, Priority:{uiPagesList[i].Priority}, idx: {i}");
+            }
+            */
 
-    
+            // Update the sibling index according to the new order.
             for (int i = 0; i < uiPagesList.Count; i++)
             {
                 uiPagesList[i].transform.SetSiblingIndex(i);

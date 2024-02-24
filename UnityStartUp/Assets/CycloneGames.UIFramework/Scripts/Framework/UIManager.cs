@@ -69,7 +69,7 @@ namespace CycloneGames.UIFramework
             try
             {
                 // Attempt to load the configuration
-                pageConfig = await addressablesService.LoadAssetWithAutoReleaseAsync<UIPageConfiguration>(
+                pageConfig = await addressablesService.LoadAssetWithRetentionAsync<UIPageConfiguration>(
                     UIPathBuilder.GetConfigPath(PageName));
 
                 // If the configuration load fails, log the error and exit

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4373170411488651366}
   - component: {fileID: 557021775544036122}
   m_Layer: 0
-  m_Name: GameSubSystemServiceInstaller
+  m_Name: UIServiceInstaller
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

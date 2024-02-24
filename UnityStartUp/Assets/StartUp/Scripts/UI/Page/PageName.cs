@@ -11,6 +11,9 @@ namespace StartUp.UI
         //  Launch
         public static readonly string TitlePage = "TitlePage";
         
+        //  Loading
+        public static readonly string SimpleLoadingPage = "SimpleLoadingPage";
+        
         //  Login
         public static readonly string StartUpPage = "StartUpPage";
     }

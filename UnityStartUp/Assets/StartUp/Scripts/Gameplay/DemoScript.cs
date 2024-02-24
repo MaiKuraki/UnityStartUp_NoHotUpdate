@@ -22,8 +22,6 @@ namespace StartUp.Gameplay
         async void RefreshUI()
         {
             uiService.OpenUI(UI.PageName.StartUpPage);
-            uiService.CloseUI(UI.PageName.TitlePage);
-            await UniTask.Delay(1000);
         }
     }
 }

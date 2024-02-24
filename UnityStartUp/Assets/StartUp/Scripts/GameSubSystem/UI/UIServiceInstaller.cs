@@ -4,7 +4,7 @@ using CycloneGames.UIFramework;
 
 namespace StartUp.GameSubSystem
 {
-    public class GameSubSystemServiceInstaller : MonoInstaller
+    public class UIServiceInstaller : MonoInstaller
     {
         [Inject] private MessagePipeOptions msgOpt;
         

@@ -1,13 +1,13 @@
+using CycloneGames.GameFramework;
 using CycloneGames.UIFramework;
 using Cysharp.Threading.Tasks;
 using StartUp.GameSubSystem;
 using StartUp.UI;
-using UnityEngine;
 using Zenject;
 
 namespace StartUp.Gameplay
 {
-    public class DemoScript : MonoBehaviour
+    public class SceneLogic_StartUp : SceneLogic
     {
         [Inject] private DiContainer diContainer;
         [Inject] private IUIService uiService;
@@ -15,8 +15,10 @@ namespace StartUp.Gameplay
         
         StartUpPage startUpPage;
 
-        private void Start()
+        protected override void Start()
         {
+            base.Start();
+            
             StartDemo();
         }
 
@@ -25,7 +27,7 @@ namespace StartUp.Gameplay
             RefreshUI();
         }
 
-        async void RefreshUI()
+        void RefreshUI()
         {
             uiService.OpenUI(UI.PageName.StartUpPage);
             DelayResolve().Forget();
@@ -55,3 +57,4 @@ namespace StartUp.Gameplay
         }
     }
 }
+

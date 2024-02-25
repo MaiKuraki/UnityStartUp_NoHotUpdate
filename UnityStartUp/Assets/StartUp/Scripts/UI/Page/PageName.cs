@@ -16,5 +16,8 @@ namespace StartUp.UI
         
         //  Login
         public static readonly string StartUpPage = "StartUpPage";
+        
+        //  Gameplay
+        public static readonly string GameplayMenuPage = "GameplayMenuPage";
     }
 }

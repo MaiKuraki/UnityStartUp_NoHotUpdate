@@ -108,6 +108,7 @@ namespace CycloneGames.UIFramework
             }
             UIPage uiPage = diContainer.InstantiatePrefab(pagePrefab).GetComponent<UIPage>();
             System.Type pageType = uiPage.GetType();
+            diContainer.Unbind(pageType);
             diContainer.Bind(pageType).FromInstance(uiPage).AsCached();
             uiPage.SetPageConfiguration(pageConfig);
             uiPage.SetPageName(PageName);

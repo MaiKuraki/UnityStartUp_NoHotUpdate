@@ -1,12 +1,12 @@
+using CycloneGames.GameFramework;
 using CycloneGames.Service;
 using CycloneGames.UIFramework;
-using UnityEngine;
 using Cysharp.Threading.Tasks;
 using StartUp.GameSubSystem;
 using StartUp.UI;
 using Zenject;
 
-public class Boot : MonoBehaviour
+public class SceneLogic_Launch : SceneLogic
 {
     [Inject] private IAddressablesService addressablesService;
     [Inject] private ISceneManagementService sceneManagementService;

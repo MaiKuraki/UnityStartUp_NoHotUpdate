@@ -7,7 +7,8 @@ namespace CycloneGames.GameFramework
     public class Actor : MonoBehaviour
     {
         [SerializeField] private float initialLifeSpanSec = 0;
-
+        public event Action OwnerChanged;
+        
         private Actor owner;
         public Actor GetOwner() => owner;
         public T GetOwner<T>() where T : Actor
@@ -17,6 +18,7 @@ namespace CycloneGames.GameFramework
         public void SetOwner(Actor NewOwner)
         {
             owner = NewOwner;
+            OwnerChanged?.Invoke();
         }
 
         private string actorName;

@@ -66,7 +66,7 @@ namespace CycloneGames.GameFramework
                 return st;
             }
         }
-        void RestartPlayer(PlayerController NewPlayer)
+        public void RestartPlayer(PlayerController NewPlayer)
         {
             if (NewPlayer == null)
             {

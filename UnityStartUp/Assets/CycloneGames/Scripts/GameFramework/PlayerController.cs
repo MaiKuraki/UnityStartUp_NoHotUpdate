@@ -44,6 +44,7 @@ namespace CycloneGames.GameFramework
 
             InitPlayerState();
             SpawnCameraManager();
+            SpawnSpectatorPawn();
         }
     }
 }

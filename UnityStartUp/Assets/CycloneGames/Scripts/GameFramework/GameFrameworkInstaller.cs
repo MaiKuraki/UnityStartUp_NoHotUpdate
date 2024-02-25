@@ -6,7 +6,6 @@ namespace CycloneGames.GameFramework
     {
         public override void InstallBindings()
         {
-            
             Container.BindInterfacesTo<GameInstance>()
                 .FromNewComponentOnNewGameObject()
                 .WithGameObjectName("GameInstance")

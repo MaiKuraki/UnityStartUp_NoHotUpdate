@@ -35,10 +35,24 @@ namespace CycloneGames.GameFramework
             controller = null;
         }
 
+        //  TODO: SetPawnPrivate should not called from pawn.
         void SetPlayerState(PlayerState NewPlayerState)
         {
+            PlayerState OldPlayerState = playerState;
+            if (playerState && playerState.GetPawn() == this)
+            {
+                Pawn oldPawn = playerState.GetPawn();
+                playerState.SetPawnPrivate(null);
+            }
+            
             playerState = NewPlayerState;
-            playerState.SetPawnPrivate(this);
+
+            if (playerState)
+            {
+                Pawn oldPawn = playerState.GetPawn();
+                playerState.SetPawnPrivate(this);
+            }
+            //  OnPlayerStateChangedEvent
         }
 
         Quaternion GetControlRotation()

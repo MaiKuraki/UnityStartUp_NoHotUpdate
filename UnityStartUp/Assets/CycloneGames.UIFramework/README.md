@@ -1,8 +1,8 @@
-## 注意
-这个程序集与 CycloneGames.Service 程序集耦合，使用其中的 ResourceManagement（Addressable）和 Camera Service，目前无法将 CycloneGames.Service 拆分。
+## Note
+This assembly is tightly coupled with the CycloneGames.Service assembly and relies on its ResourceManagement (Addressable) and Camera Service. Currently, it cannot be separated from CycloneGames.Service.
 
-## 框架设计
-这个程序集设计了一套以 UIRoot - Layer - Page 的结构框架，在每个 Layer 中实现了 Page 的自动排序管理。
+## Framework Design
+This assembly is designed with a hierarchical structure of UIRoot - Layer - Page, where each Layer manages the automatic sorting of Pages.
 ```
 UIRoot
   ├─ Layer 1 (eg. General) 
@@ -13,9 +13,9 @@ UIRoot
   └─ Layer 3 (eg. FullScreenOverlay)
        └─ Page 4
 ```
-## 教程
-### 创建 PagePrefab
-待补充
+## Tutorial
+### Creating PagePrefab
+To be added.
 
-### 创建 PageConfig
-待补充
+### Creating PageConfig
+To be added.

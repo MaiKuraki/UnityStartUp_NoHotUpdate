@@ -1,4 +1,4 @@
-# Unity StartUP With HotUpdate
+# Unity StartUP No HotUpdate
 ## Overview
 This project is built upon a DI/IoC framework, offering a type design reminiscent of Unreal Engine's GameplayFramework. It includes a straightforward hierarchical UI framework and an automated packaging script. Tailored for projects not requiring hot updates, such as startup projects for Game Jams or other standalone endeavors.
 ## File Directory Structure

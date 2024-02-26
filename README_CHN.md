@@ -1,4 +1,4 @@
-# Unity StartUP With HotUpdate
+# Unity StartUP No HotUpdate
 ## 关于
 该项目基于 DI/IoC 框架，提供了一套类似于虚幻引擎 GameplayFramework 的类型设计。它包括一个简易的分层 UI 框架以及一个自动化的打包脚本。适用于非热更新的项目，比如 GameJam 的启动项目或其它单机项目。
 ## 文件目录结构

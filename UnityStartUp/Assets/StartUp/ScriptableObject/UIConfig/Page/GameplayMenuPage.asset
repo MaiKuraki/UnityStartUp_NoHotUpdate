@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0ed2f4a7fe492f449faba41c737e4b7, type: 3}
   m_Name: GameplayMenuPage
   m_EditorClassIdentifier: 
-  pagePrefab: {fileID: 0}
+  pagePrefab: {fileID: 8529159451422757018, guid: 8283a166765d9924a978d28165f82957,
+    type: 3}
   layer: {fileID: 11400000, guid: b986c198a848ec746a09af94ee13fa77, type: 2}

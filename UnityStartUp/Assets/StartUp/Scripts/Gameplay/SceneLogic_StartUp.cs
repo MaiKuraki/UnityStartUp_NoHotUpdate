@@ -1,6 +1,5 @@
 using CycloneGames.GameFramework;
 using CycloneGames.UIFramework;
-using Cysharp.Threading.Tasks;
 using StartUp.GameSubSystem;
 using StartUp.UI;
 using Zenject;
@@ -13,8 +12,6 @@ namespace StartUp.Gameplay
         [Inject] private IUIService uiService;
         [Inject] private ISceneManagementService sceneManagementService;
         
-        StartUpPage startUpPage;
-
         protected override void Start()
         {
             base.Start();

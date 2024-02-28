@@ -11,7 +11,7 @@ namespace CycloneGames.UIFramework
     internal static class UIPathBuilder
     {
         public static string GetConfigPath(string pageName)
-            => $"Assets/CMRPG/ScriptableObject/UIConfig/Page/{pageName}.asset";
+            => $"Assets/StartUp/ScriptableObject/UIConfig/Page/{pageName}.asset";
     }
 
     public class UIManager : MonoBehaviour

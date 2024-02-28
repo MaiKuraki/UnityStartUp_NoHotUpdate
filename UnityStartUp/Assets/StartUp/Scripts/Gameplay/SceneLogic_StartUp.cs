@@ -24,22 +24,17 @@ namespace StartUp.Gameplay
 
         void StartDemo()
         {
-            RefreshUI();
-        }
-
-        void RefreshUI()
-        {
-            uiService.OpenUI(UI.PageName.StartUpPage);
-            DelayResolve().Forget();
+            uiService.OpenUI(UI.PageName.StartUpPage, OnPageCreated: BindStartUpPageEvents);
         }
         
-        async UniTask DelayResolve()
+        void BindStartUpPageEvents(UIPage uiPage)
         {
-            //  TODO: if we get the StartUpPage opened state, this delay must be replaced by OnPageOpened(StartUpPage)
-            await UniTask.Delay(1000);
-            startUpPage = diContainer.Resolve<StartUpPage>();
-            startUpPage.OnClickNewGame -= EnterGameplay;
-            startUpPage.OnClickNewGame += EnterGameplay;
+            StartUpPage startUpPage = uiPage as StartUpPage;
+            if (startUpPage)
+            {
+                startUpPage.OnClickNewGame -= EnterGameplay;
+                startUpPage.OnClickNewGame += EnterGameplay;
+            }
         }
         
         void EnterGameplay()

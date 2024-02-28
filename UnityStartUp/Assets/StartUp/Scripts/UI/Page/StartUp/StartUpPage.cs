@@ -20,16 +20,63 @@ namespace StartUp.UI
         public event Action OnClickTutorial;
         public event Action OnClickCredit;
         public event Action OnClickExitGame;
+        private Transform ContinuePlayBtnTF;
+
+        private bool IsLocalSaveValid = false;  //  Simulate if Player have a GameSaveData
 
         protected override void Awake()
         {
             base.Awake();
+
+            ContinuePlayBtnTF = Btn_ContinuePlay.transform;
+            Btn_NewGame.onClick.AddListener(ClickNewGame);
+            Btn_ContinuePlay.onClick.AddListener(ClickContinuePlay);
+            Btn_Tutorial.onClick.AddListener(ClickTutorial);
+            Btn_Credit.onClick.AddListener(ClickCredit);
+            Btn_Exit.onClick.AddListener(ClickExitGame);
+        }
+
+        protected override void Start()
+        {
+            base.Start();
+
+            if (!IsLocalSaveValid)
+            {
+                ContinuePlayBtnTF.gameObject.SetActive(false);
+            }
+        }
+
+        void ClickNewGame()
+        {
+            OnClickNewGame?.Invoke();
+        }
+
+        void ClickContinuePlay()
+        {
+            OnClickContinuePlay?.Invoke();
+        }
+
+        void ClickTutorial()
+        {
+            OnClickTutorial?.Invoke();
+        }
+
+        void ClickCredit()
+        {
+            OnClickCredit?.Invoke();
+        }
+
+        void ClickExitGame()
+        {
+            OnClickExitGame?.Invoke();
             
-            Btn_NewGame.onClick.AddListener(() => OnClickNewGame?.Invoke());
-            Btn_ContinuePlay.onClick.AddListener(() => OnClickContinuePlay?.Invoke());
-            Btn_Tutorial.onClick.AddListener(() => OnClickTutorial?.Invoke());
-            Btn_Credit.onClick.AddListener(() => OnClickCredit?.Invoke());
-            Btn_Exit.onClick.AddListener(() => OnClickExitGame?.Invoke());
+#if UNITY_EDITOR
+            // 如果我们在Unity编辑器中，停止播放模式
+            UnityEditor.EditorApplication.isPlaying = false;
+#else
+            // 在构建的游戏中，退出应用程序
+            Application.Quit();
+#endif
         }
     }
 }

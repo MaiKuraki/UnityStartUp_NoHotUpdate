@@ -48,6 +48,7 @@ namespace CycloneGames.UIFramework
             foreach (UIPage page in uiPagesList)
             {
                 page.SetPageName(page.gameObject.name);
+                
             }
             
             SortPagesByPriority();
@@ -126,7 +127,7 @@ namespace CycloneGames.UIFramework
             UIPage page = TryGetPageByPageName(InPageName);
             if (!page)
             {
-                Debug.LogError($"{DEBUG_FLAG} Remove Page Failure, PageName: {InPageName}");
+                Debug.LogError($"{DEBUG_FLAG} Remove Page Failure, layer:{LayerName}, PageName: {InPageName}");
                 return;
             }
             

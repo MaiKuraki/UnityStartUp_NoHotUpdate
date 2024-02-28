@@ -6,12 +6,12 @@ namespace CycloneGames.UIFramework
     public class UIMessage
     {
         public string MessageCode;
-        public string[] Params;
+        public object[] Params;
     }
     public interface IUIService
     {
         void PublishUIMessage(UIMessage uiMsg);
-        void OpenUI(string PageName);
+        void OpenUI(string PageName, System.Action<UIPage> OnPageCreated = null);
         void CloseUI(string PageName);
     }
     public class UIService : IUIService, IInitializable
@@ -26,6 +26,7 @@ namespace CycloneGames.UIFramework
         public void Initialize()
         {
             uiManager = diContainer.InstantiateComponentOnNewGameObject<UIManager>("UIService");
+            //UnityEngine.GameObject.DontDestroyOnLoad(uiManager);
         }
 
         public void PublishUIMessage(UIMessage uiMsg)
@@ -33,14 +34,14 @@ namespace CycloneGames.UIFramework
             uiMsgPub.Publish(uiMsg);
         }
 
-        public void OpenUI(string PageName)
+        public void OpenUI(string PageName, System.Action<UIPage> OnPageCreated = null)
         {
             if (uiManager == null)
             {
                 UnityEngine.Debug.Log($"{DEBUG_FLAG} Invalid UIManager");
             }
             
-            uiManager.OpenUI(PageName);
+            uiManager.OpenUI(PageName, OnPageCreated);
         }
 
         public void CloseUI(string PageName)

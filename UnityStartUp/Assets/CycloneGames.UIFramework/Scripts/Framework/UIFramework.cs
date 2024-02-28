@@ -15,8 +15,6 @@ namespace CycloneGames.UIFramework
 
         private void Awake()
         {
-            DontDestroyOnLoad(this);
-            
             uiRootTF = uiRoot.transform;
             uiCameraTF = uiCamera.transform;
         }

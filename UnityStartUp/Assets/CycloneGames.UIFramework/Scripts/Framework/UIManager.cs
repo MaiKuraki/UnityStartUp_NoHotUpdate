@@ -11,7 +11,7 @@ namespace CycloneGames.UIFramework
     internal static class UIPathBuilder
     {
         public static string GetConfigPath(string pageName)
-            => $"Assets/StartUp/ScriptableObject/UIConfig/Page/{pageName}.asset";
+            => $"Assets/CMRPG/ScriptableObject/UIConfig/Page/{pageName}.asset";
     }
 
     public class UIManager : MonoBehaviour
@@ -28,21 +28,35 @@ namespace CycloneGames.UIFramework
         {
             uiMsgSub.Subscribe(msg =>
             {
-                if (msg.MessageCode == UIMessageCode.OPEN_UI)
+                if (msg.Params != null && msg.Params.Length > 0)
                 {
-                    OpenUI(msg.Params[0]);
-                }
+                    if (msg.MessageCode == UIMessageCode.OPEN_UI)
+                    {
+                        if (msg.Params != null && msg.Params.Length > 1 && msg.Params[1] is System.Action<UIPage> onPageCreated)
+                        {
+                            OpenUI(msg.Params[0].ToString(), onPageCreated);
+                        }
+                        else
+                        {
+                            OpenUI(msg.Params[0].ToString());
+                        }
+                    }
 
-                if (msg.MessageCode == UIMessageCode.CLOSE_UI)
+                    if (msg.MessageCode == UIMessageCode.CLOSE_UI)
+                    {
+                        CloseUI(msg.Params[0].ToString());
+                    }
+                }
+                else
                 {
-                    CloseUI(msg.Params[0]);
+                    Debug.LogError("Invalid Params");
                 }
             });
         }
 
-        internal void OpenUI(string PageName)
+        internal void OpenUI(string PageName, System.Action<UIPage> OnPageCreated = null)
         {
-            OpenUIAsync(PageName).Forget();
+            OpenUIAsync(PageName, OnPageCreated).Forget();
         }
 
         internal void CloseUI(string PageName)
@@ -50,7 +64,7 @@ namespace CycloneGames.UIFramework
             CloseUIAsync(PageName).Forget();
         }
 
-        async UniTask OpenUIAsync(string PageName)
+        async UniTask OpenUIAsync(string PageName, System.Action<UIPage> OnPageCreated = null)
         {
             // Avoid duplicated open same UI
             if (uiOpenTasks.ContainsKey(PageName))
@@ -113,7 +127,8 @@ namespace CycloneGames.UIFramework
             uiPage.SetPageConfiguration(pageConfig);
             uiPage.SetPageName(PageName);
             uiLayer.AddPage(uiPage);
-
+            OnPageCreated?.Invoke(uiPage);
+            
             tcs.TrySetResult(true);
         }
 
@@ -130,11 +145,11 @@ namespace CycloneGames.UIFramework
 
             if (!layer)
             {
-                Debug.LogError($"{DEBUG_FLAG} Can not find layer from PageName: {PageName}");
+                Debug.LogWarning($"{DEBUG_FLAG} Can not find layer from PageName: {PageName}, you may Close UI multi times");
                 return;
             }
 
-            layer.RemovePage(PageName);
+            layer?.RemovePage(PageName);
             
             addressablesService.ReleaseAssetHandle(UIPathBuilder.GetConfigPath(PageName));
         }

@@ -959,7 +959,7 @@ GameObject:
   - component: {fileID: 8987813024053339316}
   - component: {fileID: 733768198402138887}
   m_Layer: 5
-  m_Name: Layer_4000
+  m_Name: Layer_Dialogue_4000
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1019,7 +1019,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff0412f766467f848adad9f592e751dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  layerName: Layer4000
+  layerName: Layer_Dialogue
 --- !u!114 &733768198402138887
 MonoBehaviour:
   m_ObjectHideFlags: 0

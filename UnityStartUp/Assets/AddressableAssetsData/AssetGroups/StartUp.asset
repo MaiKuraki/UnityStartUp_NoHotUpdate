@@ -10,20 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
-  m_Name: CycloneGamesAssets
+  m_Name: StartUp
   m_EditorClassIdentifier: 
-  m_GroupName: CycloneGamesAssets
+  m_GroupName: StartUp
   m_Data:
     m_SerializedData: []
-  m_GUID: b7077d4c07608ff44ad14c92fd4c55e7
+  m_GUID: 796417869c8b5eb42b01ba4f8aa4e7ce
   m_SerializeEntries:
-  - m_GUID: cb2847c8ccfd743d7bb6682fb4f47d77
-    m_Address: Assets/CycloneGames/Prefabs
+  - m_GUID: 867b813062146d245b018203ff35f926
+    m_Address: Assets/StartUp/ScriptableObject
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: e6b679c82f511654284445e6a0f4b14d
-    m_Address: Assets/CycloneGames/ScriptableObject
+  - m_GUID: 9c53962885c2c4f449125a979d6ad240
+    m_Address: Assets/StartUp/Scenes
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -31,5 +31,5 @@ MonoBehaviour:
   m_Settings: {fileID: 11400000, guid: 21ab00d68a84fc944bdd96a426a3f57c, type: 2}
   m_SchemaSet:
     m_Schemas:
-    - {fileID: 11400000, guid: 8687fc4765058464b9499b0a325051b4, type: 2}
-    - {fileID: 11400000, guid: eb8452d50c2e3134fae728a34e6373a6, type: 2}
+    - {fileID: 11400000, guid: 57f98fa7be07f414eaa522ea4bde81fe, type: 2}
+    - {fileID: 11400000, guid: f446f30fd85de2b438a4ac1d3dba589a, type: 2}

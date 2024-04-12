@@ -12,12 +12,12 @@ public class SceneLogic_Launch : SceneLogic
     [Inject] private ISceneManagementService sceneManagementService;
     [Inject] private IUIService uiService;
 
-    private void Awake()
+    protected override void Awake()
     {
         
     }
 
-    private void Start()
+    protected override void Start()
     {
         EnterGameScene();
     }
@@ -36,8 +36,8 @@ public class SceneLogic_Launch : SceneLogic
             Priority = 100
         } }, PageName.SimpleLoadingPage, 2000,new []{"Scene_Launch"});
     }
-    
-    private void OnDestroy()
+
+    protected override void OnDestroy()
     {
         uiService.CloseUI(PageName.TitlePage);
     }

@@ -1,3 +1,6 @@
+# CAUTION
+## This repository is deprecated, please check out new repo at [[New Repo]](https://github.com/MaiKuraki/UnityStarter.git)
+
 # Unity StartUp Project Template(No HotUpdate Module)
 <p align="center">
     <br> English | <a href="README_CHN.md">中文</a>
